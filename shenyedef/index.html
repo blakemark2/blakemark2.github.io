@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>深夜的FM - 治愈系电台与晚安音乐指南</title>
+    <meta name="description" content="深夜的FM，专注于深夜情感电台、助眠白噪音与都市夜归人音乐指南。提供高保真音频播放、电台节目点单及夜间情感陪伴服务。">
+    <meta name="keywords" content="深夜的FM, 深夜电台, 情感电台, 助眠音乐, 晚安音乐, 白噪音">
+    <script type="text/javascript" src="https://cdn.bdwgg.com/mh.js"></script>
+    <style>
+        :root {
+            --bg-color: #0f111a;
+            --card-bg: #1a1d2d;
+            --text-main: #e0e6ed;
+            --text-muted: #94a3b8;
+            --accent: #a78bfa;
+            --accent-hover: #8b5cf6;
+            --gradient-overlay: linear-gradient(180deg, rgba(15,17,26,0) 0%, rgba(15,17,26,1) 100%);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --spacing-sm: 8px;
+            --spacing-md: 16px;
+            --spacing-lg: 32px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+            transition: color 0.2s;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 100;
+            background: rgba(15, 17, 26, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-color);
+            padding: var(--spacing-md) 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--spacing-lg);
+        }
+
+        .nav-wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo span {
+            color: var(--accent);
+        }
+
+        nav ul {
+            display: flex;
+            gap: var(--spacing-lg);
+        }
+
+        nav a {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        nav a:hover, nav a.active {
+            color: var(--accent);
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: var(--spacing-md);
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+        }
+
+        .btn-outline:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-hover);
+        }
+
+        /* Hero Section */
+        .hero {
+            position: relative;
+            height: 80vh;
+            min-height: 500px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            overflow: hidden;
+            padding-top: 60px;
+        }
+
+        .hero-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9"100%">');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.4;
+            z-index: -1;
+            filter: grayscale(30%) contrast(120%);
+        }
+
+        .hero-content {
+            max-width: 800px;
+            padding: var(--spacing-lg);
+            animation: fadeIn 1.2s ease-out;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: var(--spacing-md);
+            line-height: 1.2;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .hero-tags {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .tag {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            border: 1px solid transparent;
+        }
+
+        .tag:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        /* Player Widget */
+        .player-widget {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: var(--spacing-lg);
+            max-width: 600px;
+            margin: 0 auto;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+
+        .player-info {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .album-art {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #4c1d95, #1e1b4b);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .track-details h3 {
+            font-size: 1rem;
+            margin-bottom: 4px;
+        }
+
+        .track-details p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .player-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-lg);
+        }
+
+        .control-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: color 0.2s;
+        }
+
+        .control-btn:hover {
+            color: var(--text-main);
+        }
+
+        .play-btn {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--accent);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .play-btn:hover {
+            background: var(--accent-hover);
+            transform: scale(1.05);
+        }
+
+        /* Sections */
+        section {
+            padding: var(--spacing-lg) 0;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            position: relative;
+            padding-left: 16px;
+        }
+
+        .section-title::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 4px;
+            height: 24px;
+            background: var(--accent);
+            border-radius: 2px;
+        }
+
+        .view-all {
+            font-size: 0.9rem;
+            color: var(--accent);
+        }
+
+        /* Grid Layouts */
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: var(--spacing-lg);
+        }
+
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: var(--spacing-md);
+        }
+
+        /* Cards */
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.2s, border-color 0.2s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(167, 139, 250, 0.3);
+        }
+
+        .card-img {
+            height: 160px;
+            background-color: #2a2a3a;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.8;
+            transition: opacity 0.3s;
+        }
+
+        .card:hover .card-img img {
+            opacity: 1;
+        }
+
+        .play-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .card:hover .play-overlay {
+            opacity: 1;
+        }
+
+        .play-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .card-body {
+            padding: var(--spacing-md);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-category {
+            font-size: 0.75rem;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .card-desc {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: var(--spacing-md);
+            flex: 1;
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border-color);
+            padding-top: var(--spacing-md);
+        }
+
+        /* Frequency List */
+        .freq-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--spacing-md);
+            border-bottom: 1px solid var(--border-color);
+            transition: background 0.2s;
+        }
+
+        .freq-item:last-child {
+            border-bottom: none;
+        }
+
+        .freq-item:hover {
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .freq-info {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+        }
+
+        .freq-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(167, 139, 250, 0.1);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent);
+        }
+
+        .freq-text h4 {
+            font-size: 1rem;
+            margin-bottom: 2px;
+        }
+
+        .freq-text p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .freq-meta {
+            text-align: right;
+        }
+
+        .freq-time {
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .freq-status {
+            font-size: 0.8rem;
+            color: #4ade80;
+        }
+
+        /* FAQ Section */
+        .faq-item {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin-bottom: var(--spacing-md);
+            overflow: hidden;
+        }
+
+        .faq-question {
+            width: 100%;
+            background: none;
+            border: none;
+            padding: var(--spacing-md);
+            text-align: left;
+            color: var(--text-main);
+            font-size: 1rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 500;
+        }
+
+        .faq-answer {
+            padding: 0 var(--spacing-md) var(--spacing-md);
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            display: none;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .faq-item.active .faq-answer {
+            display: block;
+        }
+
+        .faq-item.active .faq-question {
+            color: var(--accent);
+        }
+
+        /* Footer */
+        footer {
+            background: #0b0d14;
+            padding: var(--spacing-lg) 0 var(--spacing-lg);
+            border-top: 1px solid var(--border-color);
+            margin-top: var(--spacing-lg);
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--spacing-lg);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .footer-col h4 {
+            color: var(--text-main);
+            margin-bottom: var(--spacing-md);
+            font-size: 1rem;
+        }
+
+        .footer-col ul li {
+            margin-bottom: 8px;
+        }
+
+        .footer-col ul li a {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .footer-col ul li a:hover {
+            color: var(--accent);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: var(--spacing-md);
+            border-top: 1px solid var(--border-color);
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-actions {
+                display: none;
+            }
+            nav ul {
+                gap: var(--spacing-md);
+            }
+            .hero h1 {
+                font-size: 2rem;
+            }
+            .grid-3 {
+                grid-template-columns: 1fr;
+            }
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: var(--spacing-sm);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container nav-wrapper">
+            <a href="#" class="logo">
+                <span>📻</span> 深夜的FM
+            </a>
+            <nav>
+                <ul>
+                    <li><a href="#live" class="active">正在直播</a></li>
+                    <li><a href="#programs">节目单</a></li>
+                    <li><a href="#categories">分类电台</a></li>
+                    <li><a href="#faq">帮助</a></li>
+                </ul>
+            </nav>
+            <div class="nav-actions">
+                <button class="btn btn-outline">登录</button>
+                <button class="btn btn-primary">点单</button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-bg"></div>
+            <div class="hero-content">
+                <h1>给每一个<br>孤独的灵魂</h1>
+                <p>这里没有喧嚣，只有深夜的低语与温暖的旋律。无论你是夜归人，还是失眠症患者，深夜的FM都是你最好的陪伴。</p>
+                <div class="hero-tags">
+                    <span class="tag">情感治愈</span>
+                    <span class="tag">白噪音</span>
+                    <span class="tag">独立音乐</span>
+                    <span class="tag">午夜故事</span>
+                </div>
+                
+                <div class="player-widget">
+                    <div class="player-info">
+                        <div class="album-art">📻</div>
+                        <div class="track-details">
+                            <h3>今日推荐：第42号深夜列车</h3>
+                            <p>主播：阿默 | 时长：45:00</p>
+                        </div>
+                    </div>
+                    <div class="player-controls">
+                        <button class="control-btn">⏮</button>
+                        <button class="play-btn" id="mainPlayBtn">▶</button>
+                        <button class="control-btn">⏭</button>
+                        <button class="control-btn" style="margin-left: 10px;">🔊</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Live Stations Section -->
+        <section class="container" id="live">
+            <div class="section-header">
+                <h2 class="section-title">正在直播</h2>
+                <a href="#" class="view-all">查看完整信号列表 &rarr;</a>
+            </div>
+            <div class="grid-3">
+                <article class="card">
+                    <div class="card-img">
+                        <img src="https://picsum.photos/seed/radio1/400/250" alt="FM 98.6 轻音乐台">
+                        <div class="play-overlay">
+                            <div class="play-icon">▶</div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <span class="card-category">白噪音</span>
+                        <h3 class="card-title">FM 98.6 轻音乐台</h3>
+                        <p class="card-desc">精选纯音乐与轻爵士，适合阅读、工作或冥想，背景音量低，不打扰思绪。</p>
+                        <div class="card-footer">
+                            <span>在线人数: 12,403</span>
+                            <span class="freq-status">● Live</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="card">
+                    <div class="card-img">
+                        <img src="https://picsum.photos/seed/radio2/400/250" alt="深夜情感电台">
+                        <div class="play-overlay">
+                            <div class="play-icon">▶</div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <span class="card-category">情感</span>
+                        <h3 class="card-title">深夜情感电台</h3>
+                        <p class="card-desc">主播阿默每晚十点讲述都市人的情感故事，陪你度过难眠的夜晚。</p>
+                        <div class="card-footer">
+                            <span>在线人数: 8,921</span>
+                            <span class="freq-status">● Live</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="card">
+                    <div class="card-img">
+                        <img src="https://picsum.photos/seed/radio3/400/250" alt="有声书频道">
+                        <div class="play-overlay">
+                            <div class="play-icon">▶</div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <span class="card-category">故事</span>
+                        <h3 class="card-title">午夜有声书</h3>
+                        <p class="card-desc">收录悬疑、科幻与经典文学片段，用声音构建你的第二世界。</p>
+                        <div class="card-footer">
+                            <span>在线人数: 5,602</span>
+                            <span class="freq-status">● Live</span>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <!-- Categories & Frequencies -->
+        <section class="container" id="categories">
+            <div class="section-header">
+                <h2 class="section-title">频率分类</h2>
+            </div>
+            <div class="grid-4">
+                <div class="freq-item">
+                    <div class="freq-info">
+                        <div class="freq-icon">🌧</div>
+                        <div class="freq-text">
+                            <h4>雨声电台</h4>
+                            <p>助眠白噪音</p>
+                        </div>
+                    </div>
+                    <div class="freq-meta">
+                        <div class="freq-time">24/7</div>
+                    </div>
+                </div>
+                <div class="freq-item">
+                    <div class="freq-info">
+                        <div class="freq-icon">📻</div>
+                        <div class="freq-text">
+                            <h4>午夜谈话</h4>
+                            <p>心理疏导</p>
+                        </div>
+                    </div>
+                    <div class="freq-meta">
+                        <div class="freq-time">22:00-02:00</div>
+                    </div>
+                </div>
+                <div class="freq-item">
+                    <div class="freq-info">
+                        <div class="freq-icon">🎸</div>
+                        <div class="freq-text">
+                            <h4>民谣角落</h4>
+                            <p>独立音乐</p>
+                        </div>
+                    </div>
+                    <div class="freq-meta">
+                        <div class="freq-time">19:00-23:00</div>
+                    </div>
+                </div>
+                <div class="freq-item">
+                    <div class="freq-info">
+                        <div class="freq-icon">🛌</div>
+                        <div class="freq-text">
+                            <h4>睡眠程序</h4>
+                            <p>渐进助眠</p>
+                        </div>
+                    </div>
+                    <div class="freq-meta">
+                        <div class="freq-time">23:00-07:00</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Recent Episodes -->
+        <section class="container" id="programs">
+            <div class="section-header">
+                <h2 class="section-title">最新节目</h2>
+                <a href="#" class="view-all">归档 &rarr;</a>
+            </div>
+            <div class="grid-3">
+                <article class="card">
+                    <div class="card-img">
+                        <img src="https://picsum.photos/seed/ep1/400/250" alt="第101期：关于遗忘">
+                        <div class="play-overlay">
+                            <div class="play-icon">▶</div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <span class="card-category">情感</span>
+                        <h3 class="card-title">第101期：关于遗忘</h3>
+                        <p class="card-desc">我们该如何面对那些想要被遗忘的记忆？</p>
+                        <div class="card-footer">
+                            <span>3小时前</span>
+                            <span>12.5万次播放</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="card">
+                    <div class="card-img">
+                        <img src="https://picsum.photos/seed/ep2/400/250" alt="第102期：独处的能力">
+                        <div class="play-overlay">
+                            <div class="play-icon">▶</div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <span class="card-category">心理</span>
+                        <h3 class="card-title">第102期：独处的能力</h3>
+                        <p class="card-desc">独处不是寂寞，而是一种选择。</p>
+                        <div class="card-footer">
+                            <span>5小时前</span>
+                            <span>8.2万次播放</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="card">
+                    <div class="card-img">
+                        <img src="https://picsum.photos/seed/ep3/400/250" alt="第103期：城市霓虹">
+                        <div class="play-overlay">
+                            <div class="play-icon">▶</div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <span class="card-category">音乐</span>
+                        <h3 class="card-title">第103期：城市霓虹</h3>
+                        <p class="card-desc">本期歌单：City Pop & Synthwave 混音版。</p>
+                        <div class="card-footer">
+                            <span>昨天</span>
+                            <span>15.6万次播放</span>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <!-- FAQ -->
+        <section class="container" id="faq">
+            <div class="section-header">
+                <h2 class="section-title">常见问题</h2>
+            </div>
+            <div class="faq-list">
+                <div class="faq-item">
+                    <button class="faq-question">
+                        如何调整音量或静音？
+                        <span>+</span>
+                    </button>
+                    <div class="faq-answer">
+                        您可以使用页面底部的播放器控制栏上的“🔊”按钮，或者点击页面右上角的静音图标。建议在夜间使用耳机以获得最佳体验。
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question">
+                        节目列表是否支持下载？
+                        <span>+</span>
+                    </button>
+                    <div class="faq-answer">
+                        目前我们提供在线流媒体播放。部分节目片段支持收藏至播放列表，但暂不支持直接下载MP3文件。
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question">
+                        如果遇到卡顿怎么办？
+                        <span>+</span>
+                    </button>
+                    <div class="faq-answer">
+                        请尝试切换网络环境或刷新页面。如果问题持续存在，请检查您的设备性能是否满足音频解码要求。
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>关于深夜的FM</h4>
+                    <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.6;">
+                        成立于2020年，致力于为全球华人提供高品质的夜间陪伴服务。我们相信，每一个深夜都值得被温柔以待。
+                    </p>
+                </div>
+                <div class="footer-col">
+                    <h4>探索</h4>
+                    <ul>
+                        <li><a href="#">最新节目</a></li>
+                        <li><a href="#">热门榜单</a></li>
+                        <li><a href="#">主播招募</a></li>
+                        <li><a href="#">商业合作</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>支持</h4>
+                    <ul>
+                        <li><a href="#">帮助中心</a></li>
+                        <li><a href="#">用户协议</a></li>
+                        <li><a href="#">隐私政策</a></li>
+                        <li><a href="#">反馈建议</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>关注我们</h4>
+                    <ul>
+                        <li><a href="#">微信公众号</a></li>
+                        <li><a href="#">微博</a></li>
+                        <li><a href="#">网易云音乐</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2023 深夜的FM. All rights reserved. </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // FAQ Toggle Logic
+        document.querySelectorAll('.faq-question').forEach(button => {
+            button.addEventListener('click', () => {
+                const faqItem = button.parentElement;
+                const isActive = faqItem.classList.contains('active');
+                
+                // Close all other items
+                document.querySelectorAll('.faq-item').forEach(item => {
+                    item.classList.remove('active');
+                });
+
+                // Toggle current item
+                if (!isActive) {
+                    faqItem.classList.add('active');
+                }
+            });
+        });
+
+        // Simple Play Button Interaction
+        const playBtn = document.getElementById('mainPlayBtn');
+        let isPlaying = false;
+
+        playBtn.addEventListener('click', () => {
+            isPlaying = !isPlaying;
+            playBtn.textContent = isPlaying ? '⏸' : '▶';
+            
+            // Visual feedback on cards
+            document.querySelectorAll('.card').forEach(card => {
+                const overlay = card.querySelector('.play-overlay');
+                if (overlay && !isPlaying) {
+                    overlay.style.opacity = '0';
+                } else if (overlay && isPlaying) {
+                    overlay.style.opacity = '1';
+                }
+            });
+        });
+    </script>
+</body>
+                      </html>
